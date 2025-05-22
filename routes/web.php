@@ -20,11 +20,11 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/connect', [MercadoPagoController::class, 'redirectToMP']);
-Route::get('/oauth/callback', [MercadoPagoController::class, 'handleCallback']);
-Route::get('/test-payment', [MercadoPagoController::class, 'testPayment']);
+Route::middleware('auth')->group(function () {
+    Route::get('/connect', [MercadoPagoController::class, 'redirectToMP'])->name('mercadopago.connect');
+    Route::get('/oauth/callback', [MercadoPagoController::class, 'handleCallback'])->name('mercadopago.callback');
+    Route::get('/test-payment', [MercadoPagoController::class, 'testPayment'])->name('mercadopago.test');
 
-//Opcion para desvincular cuenta MP
-Route::middleware(['auth'])->group(function () {
     Route::get('/mercadopago/unlink', [MercadoPagoController::class, 'unlinkMPAccount'])->name('mercadopago.unlink');
 });
+
