@@ -46,7 +46,8 @@ class MercadoPagoController extends Controller
         $user->mp_user_id = $data['user_id'];
         $user->save();
 
-        return redirect('/test-payment')->with('success', 'Cuenta de Mercado Pago vinculada correctamente.');
+        return redirect()->route('dashboard')->with('success', 'Cuenta de Mercado Pago vinculada correctamente.');
+
     }
 
     public function testPayment()
