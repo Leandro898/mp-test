@@ -33,23 +33,28 @@ class MercadoPagoController extends Controller
             'redirect_uri' => env('MP_REDIRECT_URI'),
         ]);
 
-        $data = $response->json();
-
-        if ($response->successful()) {
-            // Guardás temporalmente el access_token para pruebas
-            session(['mp_token' => $data['access_token'], 'mp_user_id' => $data['user_id']]);
-            return redirect('/test-payment');
+        if (!$response->successful()) {
+            return "Error al obtener access_token: " . $response->body();
         }
 
-        return "Error al obtener access_token: " . $response->body();
+        $data = $response->json();
+
+        // 💾 Guardamos en base de datos del usuario autenticado
+        $user = auth()->user();
+        $user->mp_access_token = $data['access_token'];
+        $user->mp_refresh_token = $data['refresh_token'];
+        $user->mp_user_id = $data['user_id'];
+        $user->save();
+
+        return redirect('/test-payment')->with('success', 'Cuenta de Mercado Pago vinculada correctamente.');
     }
 
     public function testPayment()
     {
-        $accessToken = session('mp_token');
+        $accessToken = auth()->user()->mp_access_token;
 
         if (!$accessToken) {
-            return "No hay token en sesión.";
+            return "Este usuario no tiene un token vinculado.";
         }
 
         $response = Http::withToken($accessToken)->get('https://api.mercadopago.com/users/me');
@@ -57,4 +62,3 @@ class MercadoPagoController extends Controller
         return $response->json();
     }
 }
-
