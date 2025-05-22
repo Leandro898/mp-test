@@ -6,13 +6,24 @@
     </x-slot>
 
     <!--Boton para desvincular cuenta MP -->
+    <div class="p-6 bg-white shadow-md rounded mb-4">
     @if(auth()->user()->mp_access_token)
-        <form action="{{ route('mercadopago.unlink') }}" method="GET" onsubmit="return confirm('¿Estás seguro que deseas desvincular tu cuenta de Mercado Pago?')" class="mb-4">
+        {{-- ✅ Botón para Desvincular cuenta --}}
+        <form action="{{ route('mercadopago.unlink') }}" method="GET" onsubmit="return confirm('¿Estás seguro que deseas desvincular tu cuenta de Mercado Pago?')">
             <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 Desvincular Mercado Pago
             </button>
         </form>
+    @else
+        {{-- ✅ Botón para Vincular cuenta --}}
+        <form action="{{ route('mercadopago.connect') }}" method="GET">
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Vincular Mercado Pago
+            </button>
+        </form>
     @endif
+</div>
+
 
 
 
