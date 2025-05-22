@@ -23,3 +23,8 @@ require __DIR__.'/auth.php';
 Route::get('/connect', [MercadoPagoController::class, 'redirectToMP']);
 Route::get('/oauth/callback', [MercadoPagoController::class, 'handleCallback']);
 Route::get('/test-payment', [MercadoPagoController::class, 'testPayment']);
+
+//Opcion para desvincular cuenta MP
+Route::middleware(['auth'])->group(function () {
+    Route::get('/mercadopago/unlink', [MercadoPagoController::class, 'unlinkMPAccount'])->name('mercadopago.unlink');
+});

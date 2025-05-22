@@ -61,4 +61,17 @@ class MercadoPagoController extends Controller
 
         return $response->json();
     }
+
+    public function unlinkMPAccount()
+    {
+        $user = auth()->user();
+
+        $user->mp_access_token = null;
+        $user->mp_refresh_token = null;
+        $user->mp_user_id = null;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Cuenta de Mercado Pago desvinculada correctamente.');
+    }
+
 }
